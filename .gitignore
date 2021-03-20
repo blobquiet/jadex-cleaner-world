@@ -1,5 +1,13 @@
+build
+target
+bin
+.settings
+.classpath
+.project
+
 # intellij project data
-.idea
+**/.idea
+*.iml
 
 # Compiled class file
 *.class
@@ -17,6 +25,12 @@
 *.rar
 
 
-### Gradle ###
+# Gradle
 .gradle
 build/
+
+#JADEX
+platform_auto.conf
+settings_*
+.jadex
+
