@@ -26,8 +26,11 @@ bin
 
 
 # Gradle
+**/gradle
 .gradle
 build/
+gradlew
+gradlew.bat
 
 #JADEX
 platform_auto.conf
