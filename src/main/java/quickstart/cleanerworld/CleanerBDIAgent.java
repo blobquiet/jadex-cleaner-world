@@ -29,6 +29,9 @@ public class CleanerBDIAgent
     /** Set of the known waste items. Managed by SensorActuator object. */
     @Belief
     private Set<IWaste>    wastes    = new LinkedHashSet<>();
+    /** Set of the known waste items. Managed by SensorActuator object. */
+    @Belief
+    private Set<IWastebin>    wastebins    = new LinkedHashSet<>();
 
     /**
      *  The body is executed when the agent is started.
@@ -45,6 +48,9 @@ public class CleanerBDIAgent
         
         // Tell the sensor to update the belief sets
         actsense.manageWastesIn(wastes);
+        
+        // Tell the sensor to update the belief sets
+        actsense.manageWastebinsIn(wastebins);
 
         //... add more setup code here
         //actsense.moveTo(Math.random(), Math.random());    // Dummy call so that the cleaner moves a little.
@@ -108,9 +114,47 @@ public class CleanerBDIAgent
     }
     
     /**
+     *  A goal to drop the waste.
+     */
+    @Goal(recur=true, recurdelay=7000,deliberation=@Deliberation(inhibits=PerformPatrol.class))    // Pause patrol goal while loading battery
+    class AchieveDropWaste
+    {
+    	@GoalMaintainCondition    // The cleaner aims to maintain the following expression, i.e. act to restore the condition, whenever it changes to false.
+        boolean isCarried()
+        {
+            return self.getCarriedWaste()!=null;
+        }
+        @GoalTargetCondition    // Only stop, when this condition is true
+        boolean isDropped()
+        {
+            return self.getCarriedWaste()==null;
+        }
+    }
+    
+    /**
+	 *  
+	 */
+	@Goal(excludemode=ExcludeMode.Never)
+	public class QueryWastebin
+	{
+        // Remember the wastebins
+        IWastebin    wastebin;
+
+        // Check if there is a wastebin in the beliefs
+        @GoalTargetCondition
+        boolean isWastebinKnown()
+        {
+        	wastebin = wastebins.isEmpty() ? null : wastebins.iterator().next();
+            return wastebin!=null;
+        }
+    }
+    
+    
+    
+    /**
      *  A goal to cleanup waste.
      */
-    @Goal
+    @Goal(recur=true, recurdelay=7000,deliberation=@Deliberation(inhibits=PerformPatrol.class))    // Pause patrol goal while loading battery
     class AchieveCleanupWaste
     {
         // Remember the waste item to clean up
@@ -123,9 +167,29 @@ public class CleanerBDIAgent
             System.out.println("Created achieve cleanup goal for "+waste);
             this.waste = waste;
         }
+
     }
+    
+    
+    
 
     //-------- methods that represent plans (i.e. predefined recipes for working on certain goals) --------
+    
+    @Plan(trigger=@Trigger(goals=AchieveCleanupWaste.class))
+    private void pickUpWaste(IPlan plan)
+    {
+    	System.out.println("Starting pickUpWaste() plan");
+    	IWaste    waste    = wastes.iterator().next();
+    	actsense.moveTo(waste.getLocation());
+    	actsense.pickUpWaste(waste);
+    	// Dispatch a subgoal to find a wastebin
+    	QueryWastebin    querygoal    = new QueryWastebin();
+        plan.dispatchSubgoal(querygoal).get();  //we wait synchronously by blocking the plan until the subgoal completes by using the get() method of the future.
+    	
+        IWastebin    wastebin    = wastebins.iterator().next();
+    	actsense.moveTo(wastebin.getLocation());
+    	actsense.dropWasteInWastebin(waste, wastebin);
+    }
     
     /**
      *  Move to charging station and load battery.
@@ -156,7 +220,7 @@ public class CleanerBDIAgent
     /**
      *  Declare a plan for the QueryChargingStation goal by using a method with @Plan and @Trigger annotation.
      */
-    @Plan(trigger=@Trigger(goals=QueryChargingStation.class))    // The plan annotation makes a method or class a plan. The trigger states, when the plan should considered for execution.
+    @Plan(trigger=@Trigger(goals= {QueryChargingStation.class,QueryWastebin.class}))    // The plan annotation makes a method or class a plan. The trigger states, when the plan should considered for execution.
     private void    MoveAround()
     {
     	// This will only trigger if the the QueryChargingStation is not succeed, that happens only when there's no stations in the belief-set 
