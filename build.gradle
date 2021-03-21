@@ -22,9 +22,9 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.activecomponents.jadex:jadex-distribution-minimal:'+jadex_version
+	//implementation 'org.activecomponents.jadex:jadex-distribution-minimal:'+jadex_version
 
-	//implementation 'org.activecomponents.jadex:jadex-distribution-standard:'+jadex_version
+	implementation 'org.activecomponents.jadex:jadex-distribution-standard:'+jadex_version
 	//implementation 'org.activecomponents.jadex:jadex-distribution-server:'+jadex_version
 
 	// required for cleanerworld scenario

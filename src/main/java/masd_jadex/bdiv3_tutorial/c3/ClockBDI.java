@@ -17,7 +17,7 @@ import jadex.micro.annotation.Description;
  */
 @Description("The clock agent C3. <br>  This agent uses a getter/setter belief.")
 @Agent(type=BDIAgentFactory.TYPE)
-public class Clock2BDI
+public class ClockBDI
 {
 	/** The time. */
 	protected long time;

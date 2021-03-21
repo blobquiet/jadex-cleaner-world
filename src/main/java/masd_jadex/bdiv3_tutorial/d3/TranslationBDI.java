@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.d3;
+package masd_jadex.bdiv3_tutorial.d3;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,6 @@ import jadex.bdiv3.runtime.impl.PlanFailureException;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.bridge.service.annotation.Service;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentBody;
 import jadex.micro.annotation.AgentCreated;
 import jadex.micro.annotation.AgentFeature;
 import jadex.micro.annotation.Description;

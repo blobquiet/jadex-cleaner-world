@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.b5;
+package masd_jadex.bdiv3_tutorial.b5;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +16,9 @@ import jadex.bdiv3.features.IBDIAgentFeature;
 import jadex.bdiv3.runtime.IPlan;
 import jadex.bridge.IInternalAccess;
 import jadex.bridge.component.IExecutionFeature;
+import jadex.bridge.service.annotation.OnInit;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentBody;
 import jadex.micro.annotation.AgentCreated;
 import jadex.micro.annotation.AgentFeature;
 import jadex.micro.annotation.Description;
@@ -32,7 +32,6 @@ import jadex.micro.annotation.Description;
 @Description("The translation agent B5. <br>  Using plan context conditions.")
 public class TranslationBDI
 {
-	//-------- attributes --------
 
 	/** The agent. */
 	@Agent
@@ -48,13 +47,11 @@ public class TranslationBDI
 	/** The context. */
 	@Belief
 	protected boolean context = true;
-	
-	//-------- methods --------
 
 	/**
 	 *  Create method.
 	 */
-	@AgentCreated
+	@OnInit
 	public void init()
 	{
 		this.wordtable = new HashMap<String, String>();
@@ -69,7 +66,6 @@ public class TranslationBDI
 	/**
 	 *  The agent body.
 	 */
-	//@AgentBody
 	@OnStart
 	public void body()
 	{

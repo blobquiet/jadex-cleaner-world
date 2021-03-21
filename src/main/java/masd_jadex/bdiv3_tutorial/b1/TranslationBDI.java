@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.b1;
+package masd_jadex.bdiv3_tutorial.b1;
 
 import jadex.bdiv3.BDIAgentFactory;
 import jadex.bdiv3.annotation.Body;
@@ -7,7 +7,6 @@ import jadex.bdiv3.annotation.Plans;
 import jadex.bdiv3.features.IBDIAgentFeature;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentBody;
 import jadex.micro.annotation.AgentFeature;
 import jadex.micro.annotation.Description;
 
@@ -33,7 +32,6 @@ public class TranslationBDI
 	/**
 	 *  The agent body.
 	 */
-	//@AgentBody
 	@OnStart
 	public void body()
 	{

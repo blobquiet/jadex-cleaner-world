@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.f3;
+package masd_jadex.bdiv3_tutorial.f3;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

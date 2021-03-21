@@ -32,7 +32,7 @@ public class Main
 	{
 		// Start from minimal configuration
 		IPlatformConfiguration	conf	= PlatformConfigurationHandler.getMinimal();
-		
+		conf.setGui(true);
 		
 		// Optional: open JCC for runtime tools.
 		
@@ -67,7 +67,7 @@ public class Main
 			@Override
 			public void run()
 			{
-				new EnvironmentGui().setVisible(true);
+				new EnvironmentGui().setVisible(false);
 			}
 		});
 	}

@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.g1;
+package masd_jadex.bdiv3_tutorial.g1;
 
 import java.io.BufferedReader;
 import java.io.IOException;

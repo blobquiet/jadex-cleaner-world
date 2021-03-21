@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.d6;
+package masd_jadex.bdiv3_tutorial.d6;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +18,6 @@ import jadex.bridge.component.IExecutionFeature;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.commons.future.IFuture;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentBody;
 import jadex.micro.annotation.AgentFeature;
 
 /**

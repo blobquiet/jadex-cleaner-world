@@ -1,10 +1,10 @@
-package jadex.bdiv3.tutorial.f3.old;
+package masd_jadex.bdiv3_tutorial.f3.old;
 
 import java.lang.reflect.Method;
 
 import jadex.bdiv3.runtime.impl.IServiceParameterMapper;
 import jadex.bdiv3.runtime.impl.RPlan;
-import jadex.bdiv3.tutorial.f3.TranslationGoal;
+import masd_jadex.bdiv3_tutorial.f3.TranslationGoal;
 
 /**
  *  Custom goal service mapper.

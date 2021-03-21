@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.e1;
+package masd_jadex.bdiv3_tutorial.e1;
 
 import java.util.HashMap;
 import java.util.Map;

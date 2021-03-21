@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.f3.old;
+package masd_jadex.bdiv3_tutorial.f3.old;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -18,7 +18,6 @@ import jadex.bdiv3.annotation.Plans;
 import jadex.bdiv3.annotation.ServicePlan;
 import jadex.bdiv3.annotation.Trigger;
 import jadex.bdiv3.features.IBDIAgentFeature;
-import jadex.bdiv3.tutorial.f3.TranslationGoal;
 import jadex.bridge.IInternalAccess;
 import jadex.bridge.service.ServiceScope;
 import jadex.bridge.service.annotation.OnEnd;
@@ -30,6 +29,7 @@ import jadex.commons.gui.SGUI;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.RequiredService;
 import jadex.micro.annotation.RequiredServices;
+import masd_jadex.bdiv3_tutorial.f3.TranslationGoal;
 
 /**
  * 
@@ -37,7 +37,7 @@ import jadex.micro.annotation.RequiredServices;
 @Agent(type=BDIAgentFactory.TYPE)
 @RequiredServices(@RequiredService(name="transser", type=ITranslationService.class, scope=ServiceScope.PLATFORM))
 @Goals(@Goal(clazz=TranslationGoal.class))
-@Plans(@Plan(trigger=@Trigger(goals=TranslationGoal.class), 
+@Plans(@Plan(trigger=@Trigger(goals= TranslationGoal.class),
 	body=@Body(service=@ServicePlan(name="transser", mapper=TranslationGoalMapper.class))))
 public class UserBDI
 {

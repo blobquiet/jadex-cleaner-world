@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.f3.old;
+package masd_jadex.bdiv3_tutorial.f3.old;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,11 +9,11 @@ import jadex.bdiv3.annotation.Goals;
 import jadex.bdiv3.annotation.Plan;
 import jadex.bdiv3.annotation.Publish;
 import jadex.bdiv3.annotation.Trigger;
-import jadex.bdiv3.tutorial.f3.TranslationGoal;
 import jadex.bridge.IInternalAccess;
 import jadex.bridge.service.annotation.Service;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.AgentCreated;
+import masd_jadex.bdiv3_tutorial.f3.TranslationGoal;
 
 /**
  *  The translation agent B5.
@@ -22,7 +22,7 @@ import jadex.micro.annotation.AgentCreated;
  */
 @Agent(type=BDIAgentFactory.TYPE)
 @Service
-@Goals(@Goal(clazz=TranslationGoal.class, 
+@Goals(@Goal(clazz= TranslationGoal.class,
 	publish=@Publish(type=ITranslationService.class, method="translateEnglishGerman")))
 public class TranslationBDI 
 {

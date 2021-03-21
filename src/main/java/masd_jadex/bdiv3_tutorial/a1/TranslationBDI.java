@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.a1;
+package masd_jadex.bdiv3_tutorial.a1;
 
 import jadex.bdiv3.BDIAgentFactory;
 import jadex.micro.annotation.Agent;

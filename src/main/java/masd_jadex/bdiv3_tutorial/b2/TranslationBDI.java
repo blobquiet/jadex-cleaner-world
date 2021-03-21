@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.b2;
+package masd_jadex.bdiv3_tutorial.b2;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,6 @@ import jadex.bdiv3.annotation.Plans;
 import jadex.bdiv3.features.IBDIAgentFeature;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentBody;
 import jadex.micro.annotation.AgentFeature;
 import jadex.micro.annotation.Description;
 
@@ -25,10 +24,6 @@ import jadex.micro.annotation.Description;
 @Plans(@Plan(body=@Body(TranslationBDI.TranslationPlan.class)))
 public class TranslationBDI
 {
-//	/** The agent. */
-//	@Agent
-//	protected BDIAgent agent;
-	
 	/** The bdi api. */
 	@AgentFeature
 	protected IBDIAgentFeature bdi;
@@ -36,7 +31,6 @@ public class TranslationBDI
 	/**
 	 *  The agent body.
 	 */
-	//@AgentBody
 	@OnStart
 	public void body()
 	{
@@ -52,14 +46,11 @@ public class TranslationBDI
 		/** The wordtable. */
 		protected Map<String, String> wordtable;
 
-		//-------- methods --------
-
 		/**
 		 *  Create a new TranslationPlan.
 		 */
 		public TranslationPlan()
 		{
-//			System.out.println("Created: "+this);
 			this.wordtable = new HashMap<String, String>();
 			this.wordtable.put("coffee", "Kaffee");
 			this.wordtable.put("milk", "Milch");

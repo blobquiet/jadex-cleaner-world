@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.e2;
+package masd_jadex.bdiv3_tutorial.e2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +12,9 @@ import jadex.bdiv3.annotation.Mapping;
 import jadex.bdiv3.annotation.Plan;
 import jadex.bdiv3.features.IBDIAgentFeature;
 import jadex.bdiv3.runtime.ChangeEvent;
+import jadex.bridge.service.annotation.OnInit;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentBody;
 import jadex.micro.annotation.AgentCreated;
 import jadex.micro.annotation.AgentFeature;
 
@@ -40,7 +40,7 @@ public class TranslationBDI
 	/**
 	 *  The init code.
 	 */
-	@AgentCreated
+	@OnInit
 	public void init()
 	{
 		wordtable.put("coffee", "Kaffee");
@@ -57,7 +57,6 @@ public class TranslationBDI
 	/**
 	 *  The agent body.
 	 */
-	//@AgentBody
 	@OnStart
 	public void body()
 	{

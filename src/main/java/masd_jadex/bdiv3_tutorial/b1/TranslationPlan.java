@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.b1;
+package masd_jadex.bdiv3_tutorial.b1;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,14 +15,11 @@ public class TranslationPlan
 	/** The wordtable. */
 	protected Map<String, String> wordtable;
 
-	//-------- methods --------
-
 	/**
 	 *  Create a new TranslationPlan.
 	 */
 	public TranslationPlan()
 	{
-//		System.out.println("Created: "+this);
 		this.wordtable = new HashMap<String, String>();
 		this.wordtable.put("coffee", "Kaffee");
 		this.wordtable.put("milk", "Milch");

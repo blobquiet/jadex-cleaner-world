@@ -1,4 +1,4 @@
-package jadex.bdiv3.tutorial.c2;
+package masd_jadex.bdiv3_tutorial.c2;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,9 +8,9 @@ import jadex.bdiv3.annotation.Belief;
 import jadex.bdiv3.annotation.Plan;
 import jadex.bdiv3.annotation.Trigger;
 import jadex.bdiv3.runtime.ChangeEvent;
+import jadex.bridge.service.annotation.OnInit;
 import jadex.bridge.service.annotation.Service;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentCreated;
 import jadex.micro.annotation.Description;
 import jadex.rules.eca.ChangeInfo;
 
@@ -22,16 +22,13 @@ import jadex.rules.eca.ChangeInfo;
 @Service
 public class TranslationBDI
 {
-	/** The current time. */
 	@Belief
 	protected Map<String, String> wordtable = new HashMap<String, String>();
 
 	@Belief(dynamic=true)
 	protected boolean alarm = wordtable.containsKey("bugger");
-	
-	//-------- methods --------
 
-	@AgentCreated
+	@OnInit
 	public void init()
 	{
 		wordtable.put("coffee", "Kaffee");
