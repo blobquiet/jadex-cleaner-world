@@ -37,3 +37,4 @@ platform_auto.conf
 settings_*
 .jadex
 
+/jcc.settings.json

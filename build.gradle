@@ -1,35 +1,40 @@
-description "A starting point for the Jadex turorials or your own Jadex projects."
-
-apply plugin: 'java'
-
-def jadex_version	= "4.0.230"
-sourceCompatibility = 1.8
-
-dependencies {
-	implementation 'org.activecomponents.jadex:jadex-distribution-minimal:'+jadex_version
-	
-	//implementation 'org.activecomponents.jadex:jadex-distribution-standard:'+jadex_version
-	//implementation 'org.activecomponents.jadex:jadex-distribution-server:'+jadex_version
-	//implementation 'org.activecomponents.jadex:jadex-distribution-pro:'+jadex_version
-
-	// required for cleanerworld scenario
-	implementation 'org.activecomponents.jadex:jadex-kernel-bdiv3:'+jadex_version
-	implementation 'org.activecomponents.jadex:jadex-applications-quickstart:'+jadex_version
+plugins {
+	id 'java'
 }
+
+group 'masd-jadex'
+version '1.0-SNAPSHOT'
+
+def jadex_version = "4.0.230"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
 	// Some default repositories for open source Java artifacts
 	mavenCentral()
 	jcenter()
-	
+
 	// Additional repositories (only required when using nightlies and/or pro version of Jadex).
 	maven {
 		url "https://nexus.actoron.com/content/repositories/oss-nightlies"
 	}
-	maven {
-		url "http://nexus.actoron.com/nexus/content/repositories/pro"
-	}
-	maven {
-		url "http://nexus.actoron.com/nexus/content/repositories/pro-nightlies"
-	}
+}
+
+dependencies {
+	implementation 'org.activecomponents.jadex:jadex-distribution-minimal:'+jadex_version
+
+	//implementation 'org.activecomponents.jadex:jadex-distribution-standard:'+jadex_version
+	//implementation 'org.activecomponents.jadex:jadex-distribution-server:'+jadex_version
+
+	// required for cleanerworld scenario
+	implementation 'org.activecomponents.jadex:jadex-kernel-bdiv3:'+jadex_version
+	implementation 'org.activecomponents.jadex:jadex-applications-quickstart:'+jadex_version
+
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+	useJUnitPlatform()
 }
