@@ -20,7 +20,7 @@ public class Main {
         //conf.setValue("kernel_bdi", true);
 
         IExternalAccess platform = Starter.createPlatform(conf).get();
-        CreationInfo ci = new CreationInfo().setFilename("masd_jadex/titan/titan.application.xml");
+        CreationInfo ci = new CreationInfo().setFilename("/masd_jadex/titan/titan.application.xml");
         platform.createComponent(ci).get();
     }
 }

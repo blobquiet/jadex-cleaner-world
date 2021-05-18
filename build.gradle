@@ -13,7 +13,7 @@ targetCompatibility = 1.8
 repositories {
 	// Some default repositories for open source Java artifacts
 	mavenCentral()
-	jcenter()
+	//jcenter()
 
 	// Additional repositories (only required when using nightlies and/or pro version of Jadex).
 	maven {
@@ -28,6 +28,7 @@ dependencies {
 	//implementation 'org.activecomponents.jadex:jadex-distribution-server:'+jadex_version
 
 	// required for cleanerworld scenario
+	implementation 'org.activecomponents.jadex:jadex-applications-bdiv3:'+jadex_version
 	implementation 'org.activecomponents.jadex:jadex-kernel-bdiv3:'+jadex_version
 	implementation 'org.activecomponents.jadex:jadex-applications-quickstart:'+jadex_version
 

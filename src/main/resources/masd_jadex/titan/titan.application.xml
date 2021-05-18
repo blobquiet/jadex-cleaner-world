@@ -7,7 +7,6 @@
                  xsi:schemaLocation="http://www.activecomponents.org/jadex-application http://www.activecomponents.org/jadex-application-${jadex_build_version}.xsd
                  http://www.activecomponents.org/jadex-envspace http://www.activecomponents.org/jadex-envspace-${jadex_build_version}.xsd"
                  name="titan" package="masd_jadex.titan">
-
     <imports>
         <import>jadex.extension.envsupport.environment.space2d.*</import>
         <import>jadex.extension.envsupport.environment.DeltaTimeExecutor</import>
@@ -27,14 +26,13 @@
         <import>jadex.bridge.service.types.clock.IClockService</import>
         <import>jadex.bridge.service.component.*</import>
     </imports>
-
     <extensiontypes>
         <env:envspacetype name="2dspace" class="ContinuousSpace2D" width="10000" height="10000"><!--meters-->
             <env:property name="targetradius" class="double">1.0</env:property>
             <env:property name="energy_per_meter" class="double">1.0</env:property>
             <env:property name="energy_per_kg" class="double">1.0</env:property>
 
-            <env:property name="border">Space2D.BORDER_RELAXED</env:property> <!--objects can wander off the map infinitely -->>
+            <env:property name="border">Space2D.BORDER_RELAXED</env:property> <!--objects can wander off the map infinitely -->
 
             <env:objecttypes>
                 <env:objecttype name="MiningSite">
@@ -96,13 +94,13 @@
 <!--                </env:objecttype>-->
             </env:objecttypes>
 
-            <env:tasktypes>-->
-                <env:tasktype name="move" class="MoveTask" />-->
+            <env:tasktypes>
+                <env:tasktype name="move" class="MoveTask" />
 <!--                <env:tasktype name="rotate" class="RotationTask" />-->
 <!--                <env:tasktype name="analyze" class="AnalyzeTargetTask" />-->
 <!--                <env:tasktype name="produce" class="ProduceOreTask" />-->
 <!--                <env:tasktype name="load" class="LoadOreTask" />-->
-            </env:tasktypes>-->
+            </env:tasktypes>
 
             <env:dataviews>
                 <env:dataview name="global_view" class="GeneralDataView2D" />
@@ -116,21 +114,9 @@
             </env:avatarmappings>
 
             <env:perspectives>
-                <env:perspective3d name="Complex3D" class="Perspective3D" >
-                    <!-- Sky -->
-                    <env:drawable3d objecttype="static" hasSpaceobject="false" width="1" height="1" depth="1">
-                        <env:sky skypath="jadex3d/textures/sky/sky01/" west="west.jpg" east="east.jpg" north="north.jpg" south="south.jpg" up="up.jpg" down="down.jpg" isSphere="false" />
-                        <env:rndterrain width="2" height="0.1" depth="2"
-                                        tiles="512" iterations="1000" minradius="25" maxradius="100" seed="4"
-                                        terrapath="jadex3d/textures/terrain/terrain01/" alphamap="alphamap.png"
-                                        texture01="grass.jpg" tex01val="64" texture02="dirt.jpg" tex02val="32" texture03="road.jpg" tex03val="128" shadowtype="Receive"/>
-
-
-                        <env:sound3d soundfile="jadex3d/sounds/misc/windboe.ogg" loop="true" volume="0.2" continuosly="true" positional="false" />
-                    </env:drawable3d>
-
+                <env:perspective name="2d_perspective" class="Perspective2D" >
                     <!-- Charging Station -->
-                    <env:drawable3d objecttype="ChargingStation" width="10" height="3" depth="10" rotation3d="false">
+                    <env:drawable objecttype="ChargingStation" width="10" height="3" depth="10">
 <!--                        <env:property name="oresize" dynamic="true">new Vector3Double(0.52f,Math.sqrt(((Number)$object.getProperty("ore")).intValue()/2000.0),0.52f)</env:property>-->
 <!--                        <env:property name="textda" dynamic="true">$object.getProperty("text")</env:property>-->
                         <env:object3d width=".3" height=".3" depth=".3"  x="-2" y="0" z="2" rotation="$deg45y" modelpath="jadex3d/models/buildings/homebase/base.j3o" hasLightMaterials="true" shadowtype="Cast">
@@ -147,7 +133,7 @@
 <!--                        <env:dome size="oresize" x="-2" y="0.15" z="2"  color="#FFFFFFFF" radius="1" samples="32" planes="16" texturepath="jadex3d/textures/solid/oretex.jpg" shadowtype="Cast">-->
 <!--                            <env:drawcondition>((Number)$object.getProperty("ore")).intValue()>0</env:drawcondition>-->
 <!--                        </env:dome>-->
-                    </env:drawable3d>
+                    </env:drawable>
 
                     <!--Mining Site  -->
                     <env:drawable3d objecttype="MiningSite" width="20" height="10" depth="20" rotation3d="false" isDynamic="true">
@@ -224,7 +210,7 @@
                     </env:drawable3d>
 
 
-                </env:perspective3d>
+                </env:perspective>
 
             </env:perspectives>
 

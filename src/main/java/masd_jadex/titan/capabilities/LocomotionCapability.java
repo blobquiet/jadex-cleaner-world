@@ -23,7 +23,7 @@ public class LocomotionCapability {
     @Agent
     protected ICapability capability;
 
-    protected AbstractEnvironmentSpace env = (AbstractEnvironmentSpace) EnvironmentService.getSpace(capability.getAgent(), "titan").get();
+    protected AbstractEnvironmentSpace env = (AbstractEnvironmentSpace) EnvironmentService.getSpace(capability.getAgent(), "masd_jadex/titan").get();
 
     protected ISpaceObject avatar = env.getAvatar(capability.getAgent().getDescription(), capability.getAgent().getModel().getFullName());
 
