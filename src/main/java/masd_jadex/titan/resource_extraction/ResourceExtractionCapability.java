@@ -1,7 +1,6 @@
 package masd_jadex.titan.resource_extraction;
 
-import jadex.bdiv3.annotation.Belief;
-import jadex.bdiv3.annotation.Capability;
+import jadex.bdiv3.annotation.*;
 import jadex.bdiv3.runtime.ICapability;
 import jadex.bridge.service.ServiceScope;
 import jadex.extension.envsupport.math.IVector2;
@@ -13,6 +12,9 @@ import masd_jadex.titan.work_pool_supervision.IWorkPoolSupervision;
 
 @Capability
 @RequiredServices(@RequiredService(name="work_pool_supervision", type=IWorkPoolSupervision.class, scope= ServiceScope.APPLICATION))
+@Plans({
+        @Plan(trigger=@Trigger(goals=ReserveMiningSlotGoal.class), body=@Body(ReserveMiningSlotPlan.class)),
+})
 public class ResourceExtractionCapability implements IResourceExtraction
 {
     @Agent
