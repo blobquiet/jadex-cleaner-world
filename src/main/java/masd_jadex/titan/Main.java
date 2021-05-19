@@ -12,13 +12,11 @@ import java.util.logging.Level;
 public class Main {
     public static void main(String[] args) {
         IPlatformConfiguration conf = PlatformConfigurationHandler.getDefaultNoGui();
-        conf.setGui(true);
+
+        //conf.setGui(true);
 
         // Set logging level to provider better debugging output for agents.
         conf.setLoggingLevel(Level.WARNING);
-        // Add BDI kernel (required when running BDI agents)
-        //conf.setValue("kernel_bdi", true);
-
         IExternalAccess platform = Starter.createPlatform(conf).get();
         CreationInfo ci = new CreationInfo().setFilename("/masd_jadex/titan/titan.application.xml");
         platform.createComponent(ci).get();

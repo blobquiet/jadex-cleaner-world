@@ -6,6 +6,7 @@ import jadex.commons.future.ExceptionDelegationResultListener;
 import jadex.commons.future.Future;
 import jadex.commons.future.IFuture;
 import jadex.extension.envsupport.math.IVector2;
+import masd_jadex.titan.agents.Miner;
 import masd_jadex.titan.capabilities.LocomotionCapability;
 
 @Plan
@@ -21,7 +22,7 @@ public class ProduceOrePlan
     protected IPlan rplan;
 
     @PlanReason
-    protected ProduceOreGoal goal;
+    protected Miner.ProduceOreGoal goal;
 
     public ProduceOrePlan() { }
 

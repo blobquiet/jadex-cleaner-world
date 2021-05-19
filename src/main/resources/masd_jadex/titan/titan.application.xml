@@ -27,7 +27,7 @@
         <import>jadex.bridge.service.component.*</import>
     </imports>
     <extensiontypes>
-        <env:envspacetype name="2dspace" class="ContinuousSpace2D" width="10000" height="10000"><!--meters-->
+        <env:envspacetype name="2dspace" class="ContinuousSpace2D" width="100" height="100"><!--meters-->
             <env:property name="targetradius" class="double">1.0</env:property>
             <env:property name="energy_per_meter" class="double">1.0</env:property>
             <env:property name="energy_per_kg" class="double">1.0</env:property>
@@ -37,11 +37,13 @@
             <env:objecttypes>
                 <env:objecttype name="MiningSite">
                     <env:property name="id" class="int">GlobalIds.getNewId()</env:property>
+                    <env:property name="initial_ore" class="float"/>
                     <env:property name="remaining_ore" class="float"/>
-                    <env:property name="position" class="IVector2"/>
                     <env:property name="depleted" class="boolean" dynamic="true">
                         $object.getProperty("remaining_ore") &lt;= 0.0
                     </env:property>
+                    <env:property name="num_slots" class="int">10</env:property>
+                    <env:property name="discovered" class="boolean">false</env:property>
                 </env:objecttype>
                 <env:objecttype name="Miner">
                     <env:property name="speed" class="double">10</env:property> <!--m/s -->
@@ -103,7 +105,7 @@
             </env:tasktypes>
 
             <env:dataviews>
-                <env:dataview name="global_view" class="GeneralDataView2D" />
+                <env:dataview name="all_view" class="GeneralDataView2D" />
             </env:dataviews>
 
             <env:avatarmappings>
@@ -114,13 +116,12 @@
             </env:avatarmappings>
 
             <env:perspectives>
-                <env:perspective name="2d_perspective" class="Perspective2D" >
+                <env:perspective name="icons" class="Perspective2D" >
                     <!-- Charging Station -->
-                    <env:drawable objecttype="ChargingStation" width="10" height="3" depth="10">
+                    <env:drawable objecttype="ChargingStation" width="10" height="10">
 <!--                        <env:property name="oresize" dynamic="true">new Vector3Double(0.52f,Math.sqrt(((Number)$object.getProperty("ore")).intValue()/2000.0),0.52f)</env:property>-->
 <!--                        <env:property name="textda" dynamic="true">$object.getProperty("text")</env:property>-->
-                        <env:object3d width=".3" height=".3" depth=".3"  x="-2" y="0" z="2" rotation="$deg45y" modelpath="jadex3d/models/buildings/homebase/base.j3o" hasLightMaterials="true" shadowtype="Cast">
-                        </env:object3d>
+                        <env:texturedrectangle imagepath="masd_jadex/titan/solar.png" layer="0"/>
 <!--                        <env:object3d width=".03" height=".03" depth=".03" x="-0.5" y="0.0" z="0.5" rotation="$deg180y" modelpath="jadex3d/models/buildings/mixed/jadexflag.j3o" hasLightMaterials="true" shadowtype="Cast">-->
 <!--                            <env:animation name="Wave" channel="chan01" loop="true"/>-->
 <!--                        </env:object3d>-->
@@ -128,7 +129,6 @@
 <!--                        <env:text3d  width="2" height="2" depth="1" rotation="$deg90y" x="0" y="4" z="0" text="$object.getProperty("text")" color="#FFFFFFFF" ></env:text3d>-->
 <!--                        <env:text3d  width="2" height="2" depth="1" rotation="$deg270y" x="0" y="4" z="0" text="$object.getProperty("text")" color="#FFFFFFFF" ></env:text3d>-->
 <!--                         &ndash;&gt;-->
-
 <!--                        &lt;!&ndash; Box for Ore &ndash;&gt;-->
 <!--                        <env:dome size="oresize" x="-2" y="0.15" z="2"  color="#FFFFFFFF" radius="1" samples="32" planes="16" texturepath="jadex3d/textures/solid/oretex.jpg" shadowtype="Cast">-->
 <!--                            <env:drawcondition>((Number)$object.getProperty("ore")).intValue()>0</env:drawcondition>-->
@@ -136,7 +136,18 @@
                     </env:drawable>
 
                     <!--Mining Site  -->
-                    <env:drawable3d objecttype="MiningSite" width="20" height="10" depth="20" rotation3d="false" isDynamic="true">
+                    <env:drawable objecttype="MiningSite" width="20" height="20">
+                        <env:property name="slots_size" dynamic="true">$object.getProperty("num_slots")</env:property>
+                        <env:property name="remaining_ore_size" dynamic="true">new Vector2Double($object.getProperty("remaining_ore")/$object.getProperty("initial_ore"))</env:property>
+                        <env:ellipse size="remaining_ore_size" layer="1" color="#88880088">
+                            <env:drawcondition>$object.getProperty("discovered")</env:drawcondition>
+                        </env:ellipse>
+                        <env:rectangle width="0.2" height="0.2" color="#888888" layer="0">
+                            <env:drawcondition>$object.getProperty("discovered")</env:drawcondition>
+                        </env:rectangle>
+                        <env:ellipse width="0.1" height="0.1" color="#88888888" layer="0">
+                            <env:drawcondition>!$object.getProperty("discovered")</env:drawcondition>
+                        </env:ellipse>
 <!--                        <env:property name="oresize" dynamic="true">new Vector3Double(0.2,Math.sqrt(((Number)$object.getProperty("ore")).intValue()/2000.0),0.2)</env:property>-->
 <!--                        <env:property name="capa" dynamic="true">new Vector3Double(Math.sqrt(((Number)$object.getProperty("capacity")).intValue()/200.0),Math.sqrt(((Number)$object.getProperty("capacity")).intValue()/800.0),Math.sqrt(((Number)$object.getProperty("capacity")).intValue()/200.0))</env:property>-->
 <!--                        <env:property name="capapos" dynamic="true">new Vector3Double(0,-0.1,0)</env:property>-->
@@ -151,13 +162,13 @@
 <!--                            <env:drawcondition>((Number)$object.getProperty("capacity")).intValue()>0</env:drawcondition>-->
 <!--                        </env:dome>-->
 
-                        <env:object3d width=".5" height=".5" depth=".5"  modelpath="jadex3d/models/buildings/mixed/flag.j3o" hasLightMaterials="true" shadowtype="Cast">
-                            <env:animation name="Wave" channel="chan" loop="true">
-                            </env:animation>
+<!--                        <env:object3d width=".5" height=".5" depth=".5"  modelpath="jadex3d/models/buildings/mixed/flag.j3o" hasLightMaterials="true" shadowtype="Cast">-->
+<!--                            <env:animation name="Wave" channel="chan" loop="true">-->
+<!--                            </env:animation>-->
 <!--                            <env:drawcondition>-->
 <!--                                $space.getSpaceObjectsByType("WorkPoolSupervision")[0].getProperty("knownMiningSites").contains($object) &amp;&amp; !$object.getProperty("depleted")-->
 <!--                            </env:drawcondition>-->
-                        </env:object3d>
+<!--                        </env:object3d>-->
 
 <!--                        <env:sound3d soundfile="jadex3d/sounds/misc/dadum.ogg" loop="false" volume="0.4" continuosly="false" positional="true" >-->
 <!--                            <env:soundcondition>-->
@@ -173,7 +184,7 @@
 <!--                            </env:soundcondition>-->
 <!--                        </env:sound3d>-->
 
-                    </env:drawable3d>
+                    </env:drawable>
 
 
 <!--                    <env:drawable3d objecttype="sentry" width="0.16" height="0.16" depth="0.16" autoRotation="false">-->
@@ -194,8 +205,8 @@
 <!--                        &lt;!&ndash; 					</env:sound3d> &ndash;&gt;-->
 <!--                    </env:drawable3d>-->
 
-                    <env:drawable3d objecttype="Miner" width="2" height="2" depth="2" autoRotation="false">
-                        <env:cylinder width="1" height="1" depth="1" color="#FF0000" rotation="$deg90y" shadowtype="Cast"/>
+                    <env:drawable objecttype="Miner" width="2" height="2">
+                        <env:ellipse width="1" height="1" color="#000000FF" />
 <!--                        <env:object3d width="0.25" height="0.25" depth="0.25" x="0" y="0.03" z="0.0"   modelpath="jadex3d/models/vehicles/tractor/tractor.j3o" hasLightMaterials="true" shadowtype="Cast">-->
 <!--                            <env:animation name="DigAll" channel="chan01" loop="false">-->
 <!--                                <env:animationcondition>$object.getProperty("status").equals("ore")</env:animationcondition>-->
@@ -207,7 +218,7 @@
 <!--                        <env:sound3d soundfile="jadex3d/sounds/misc/digging.ogg" loop="false" volume="0.4" continuosly="false" positional="true" >-->
 <!--                            <env:soundcondition>$object.getProperty("status").equals("ore")</env:soundcondition>-->
 <!--                        </env:sound3d>-->
-                    </env:drawable3d>
+                    </env:drawable>
 
 
                 </env:perspective>
@@ -230,42 +241,43 @@
     </componenttypes>
 
     <configurations>
-        <configuration name="1 ChargingStation / 2 Miners / ...">
+        <configuration name="1 ChargingStation / 3 Mining Sites / Todo: ...">
             <extensions>
                 <env:envspace name="titan" type="2dspace">
                     <env:objects>
                         <env:object type="ChargingStation">
-                            <env:property name="position">new Vector2Double(0.0, 0.0)</env:property>
-<!--                            <env:property name="space">$space</env:property>&lt;!&ndash; hack!!! &ndash;&gt;-->
-<!--                            <env:property name="missiontime">-->
-<!--                                300000 + ((IClockService)$component.getFeature(IRequiredServicesFeature.class).searchLocalService(new ServiceQuery( IClockService.class, ServiceScope.PLATFORM))).getTime()-->
-<!--                            </env:property>-->
+                            <env:property name="position">new Vector2Double(50.0, 50.0)</env:property>
                         </env:object>
                         <env:object type="MiningSite">
                             <env:property name="position">new Vector2Double(60, 32)</env:property>
                             <env:property name="remaining_ore">3000</env:property>
+                            <env:property name="initial_ore">3000</env:property>
                         </env:object>
                         <env:object type="MiningSite">
-                            <env:property name="position">new Vector2Double(-3, -3)</env:property>
+                            <env:property name="position">new Vector2Double(3, 3)</env:property>
                             <env:property name="remaining_ore">3000</env:property>
+                            <env:property name="initial_ore">3000</env:property>
                         </env:object>
                         <env:object type="MiningSite">
-                            <env:property name="position">new Vector2Double(10, 13)</env:property>
+                            <env:property name="position">new Vector2Double(20, 80)</env:property>
                             <env:property name="remaining_ore">3000</env:property>
+                            <env:property name="initial_ore">3000</env:property>
+                            <env:property name="discovered">true</env:property>
                         </env:object>
                     </env:objects>
 
 <!--                    <env:dataproviders>-->
-<!--                        <env:dataprovider name="homebase_ore">-->
-<!--                            <env:source name="$homebase" objecttype="homebase"/>-->
-<!--                            <env:data name="ore_amount">$homebase.ore</env:data>-->
+<!--                        <env:dataprovider name="available_ore">-->
+<!--                            <env:source name="$MiningSite" objecttype="MiningSite"/>-->
+<!--                            <env:data name="available_ore_amount">$MiningSite.remaining_ore</env:data>-->
+<!--                            <env:data name="time">$time</env:data>-->
 <!--                        </env:dataprovider>-->
 <!--                    </env:dataproviders>-->
 
 <!--                    <env:dataconsumers>-->
 <!--                        <env:dataconsumer name="ore_chart" class="XYChartDataConsumer">-->
-<!--                            <env:property name="dataprovider">"homebase_ore"</env:property>-->
-<!--                            <env:property name="title">"Ore in homebase"</env:property>-->
+<!--                            <env:property name="dataprovider">"available_ore"</env:property>-->
+<!--                            <env:property name="title">"Ore available in Mining Site"</env:property>-->
 <!--                            <env:property name="labelx">"Time"</env:property>-->
 <!--                            <env:property name="labely">"Ore"</env:property>-->
 <!--                            <env:property name="maxitemcount">500</env:property>-->
@@ -274,17 +286,17 @@
 <!--                            &lt;!&ndash; Defines a normal series. &ndash;&gt;-->
 <!--                            <env:property name="seriesname">"Ore"</env:property>-->
 <!--                            <env:property name="valuex">"time"</env:property>-->
-<!--                            <env:property name="valuey">"ore_amount"</env:property>-->
+<!--                            <env:property name="valuey">"available_ore_amount"</env:property>-->
 <!--                        </env:dataconsumer>-->
 <!--                    </env:dataconsumers>-->
 
-<!--                    <env:observers>-->
-<!--                        <env:observer name="Titan" dataview="view_all" perspective="icons">-->
+                    <env:observers>
+                        <env:observer name="Titan" dataview="view_all" perspective="icons">
 <!--                            <env:plugin name="evaluation" class="EvaluationPlugin">-->
-<!--                                <env:property name="component_0">((AbstractChartDataConsumer)$space.getDataConsumer("ore_chart")).getChartPanel()</env:property>-->
+<!--&lt;!&ndash;                                <env:property name="component_0">((AbstractChartDataConsumer)$space.getDataConsumer("ore_chart")).getChartPanel()</env:property>&ndash;&gt;-->
 <!--                            </env:plugin>-->
-<!--                        </env:observer>-->
-<!--                    </env:observers>-->
+                        </env:observer>
+                    </env:observers>
                 </env:envspace>
             </extensions>
             <components>
