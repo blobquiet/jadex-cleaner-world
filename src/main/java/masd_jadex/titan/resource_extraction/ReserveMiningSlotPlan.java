@@ -2,20 +2,17 @@ package masd_jadex.titan.resource_extraction;
 
 import jadex.bdiv3.annotation.*;
 import jadex.bdiv3.runtime.IPlan;
+import jadex.bdiv3.runtime.impl.PlanFailureException;
+import jadex.commons.future.ExceptionDelegationResultListener;
 import jadex.commons.future.Future;
 import jadex.commons.future.IFuture;
-import jadex.extension.envsupport.math.IVector2;
-import masd_jadex.titan.capabilities.LocomotionCapability;
 import masd_jadex.titan.work_pool_supervision.IWorkPoolSupervision;
 
 @Plan
 public class ReserveMiningSlotPlan {
 
     @PlanCapability
-    protected ResourceExtractionCapability capability;
-
-    @PlanCapability
-    protected LocomotionCapability locomotionCapability;
+    protected ResourceExtractionCapability resourceExtraction;
 
     @PlanAPI
     protected IPlan rplan;
@@ -30,30 +27,20 @@ public class ReserveMiningSlotPlan {
     {
         final Future<Void> ret = new Future<Void>();
 
-        IWorkPoolSupervision workPoolSupervision = capability.getWorkPoolSupervision();
-        workPoolSupervision.requestMiningSlot((IVector2)locomotionCapability.getAvatar().getProperty("position"));
-        // TODO: somehow wait on a change event of this believe? Not sure how you wait for an answer:
-        //resourceExtractionCapability.slotReservationId
-
-
-//        IFuture<LocomotionCapability.MoveGoal> fut = rplan.dispatchSubgoal(capa.new AchieveMoveTo(waste.getLocation()));
-//        fut.addResultListener(new ExceptionDelegationResultListener<CleanerAgent.AchieveMoveTo, Void>(ret)
-//        {
-//            public void customResultAvailable(AchieveMoveTo amt)
-//            {
-//                IFuture<PickupWasteAction> fut = rplan.dispatchSubgoal(capa.new PickupWasteAction(waste));
-//                fut.addResultListener(new ExceptionDelegationResultListener<CleanerAgent.PickupWasteAction, Void>(ret)
-//                {
-//                    public void customResultAvailable(PickupWasteAction pwa)
-//                    {
-//                        capa.setCarriedwaste(waste);
-////						System.out.println("carried waste set to: "+waste+rplan.getId()+" "+((IGoal)rplan.getReason()).getId());
-//                        capa.getWastes().remove(waste);
-//                        ret.setResult(null);
-//                    }
-//                });
-//            }
-//        });
+        Future<ReserveMiningSlotGoal.AssignMiningSlotMsgData> assignMiningSlotMsgData = new Future<>();
+        assignMiningSlotMsgData.addResultListener(new ExceptionDelegationResultListener<ReserveMiningSlotGoal.AssignMiningSlotMsgData, Void>(ret) {
+            @Override
+            public void customResultAvailable(ReserveMiningSlotGoal.AssignMiningSlotMsgData result) throws Exception {
+                if (result == null) {
+                    throw new PlanFailureException("Failed to reserve a mining slot. Assignment denied by work pool supervision.");
+                } else {
+                    goal.assignMiningSlotMsgData = result;
+                    ret.setResult(null);
+                }
+            }
+        });
+        IWorkPoolSupervision workPoolSupervision = resourceExtraction.getWorkPoolSupervision();
+        workPoolSupervision.requestMiningSlot(goal.requestPosition);
 
         return ret;
     }

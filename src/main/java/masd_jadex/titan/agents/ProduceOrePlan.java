@@ -33,25 +33,25 @@ public class ProduceOrePlan
     }
 
     private void reserveMiningSlot(Future<Void> ret) {
-        IFuture<ReserveMiningSlotGoal> fut = rplan.dispatchSubgoal(new ReserveMiningSlotGoal());
+        IFuture<ReserveMiningSlotGoal> fut = rplan.dispatchSubgoal(new ReserveMiningSlotGoal(
+                (IVector2) miner.locomotion.getAvatar().getProperty("position")
+        ));
         fut.addResultListener(
-            // If an exception occurs (e.g. plan failure, then the ret Future gets called with it right away
-            new ExceptionDelegationResultListener<ReserveMiningSlotGoal, Void>(ret)
-            {
-                @Override
-                public void customResultAvailable(ReserveMiningSlotGoal result) throws Exception {
-                    int slotReservationId = result.getSlotReservationId();
-                    IVector2 miningSitePosition = result.getMiningSitePosition();
-                    moveToMiningSite(ret, slotReservationId, miningSitePosition);
+                // If an exception occurs (e.g. plan failure, then the ret Future gets called with it right away
+                new ExceptionDelegationResultListener<ReserveMiningSlotGoal, Void>(ret)
+                {
+                    @Override
+                    public void customResultAvailable(ReserveMiningSlotGoal result) {
+                        ReserveMiningSlotGoal.AssignMiningSlotMsgData data = result.getAssignMiningSlotMsgData();
+                        moveToMiningSite(ret, data.slotReservationId, data.miningSitePostion);
+                    }
                 }
-            }
-        );
+            );
     }
 
     private void moveToMiningSite(Future<Void> ret, int slotReservationId, IVector2 miningSitePosition)
     {
-        LocomotionCapability locomotion = miner.getLocomotion();
-        IFuture<LocomotionCapability.MoveGoal> fut = rplan.dispatchSubgoal(locomotion.new MoveGoal(miningSitePosition));
+        IFuture<LocomotionCapability.MoveGoal> fut = rplan.dispatchSubgoal(new LocomotionCapability.MoveGoal(miningSitePosition));
         fut.addResultListener(
                 new ExceptionDelegationResultListener<LocomotionCapability.MoveGoal, Void>(ret)
                 {
@@ -64,7 +64,6 @@ public class ProduceOrePlan
                         // TODO: how do we spawn an ore instance in the space: locomotionCapability.getEnvironment().componentAdded();
                         // TODO: check how percepts are implemented and stop when the Mining site is depleted
                         resourceExtraction.getWorkPoolSupervision().freeMiningSlot(slotReservationId);
-                        cleanup();
                         ret.setResult(null);
                     }
                 }
@@ -74,23 +73,13 @@ public class ProduceOrePlan
     @PlanAborted
     public void aborted()
     {
-        cleanup();
+
     }
 
     @PlanFailed
     public void failed(Exception e)
     {
-        cleanup();
+
     }
 
-    protected void cleanup()
-    {
-        if (miner.getResourceExtraction().slotReservationId != null) {
-            miner.getResourceExtraction().getWorkPoolSupervision().freeMiningSlot(
-                    miner.getResourceExtraction().slotReservationId
-            );
-        }
-
-        miner.getResourceExtraction().slotReservationId = null;
-    }
 }

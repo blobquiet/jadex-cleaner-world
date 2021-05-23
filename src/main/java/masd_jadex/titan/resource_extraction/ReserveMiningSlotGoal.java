@@ -1,23 +1,31 @@
 package masd_jadex.titan.resource_extraction;
 
 import jadex.bdiv3.annotation.Goal;
+import jadex.bdiv3.annotation.GoalParameter;
 import jadex.bdiv3.annotation.GoalResult;
 import jadex.extension.envsupport.math.IVector2;
 
 @Goal
 public class ReserveMiningSlotGoal
 {
-    @GoalResult
-    protected int slotReservationId;
-    @GoalResult
-    protected IVector2 miningSitePosition;
-
-    public ReserveMiningSlotGoal() { }
-
-    public int getSlotReservationId() {
-        return slotReservationId;
+    public static class AssignMiningSlotMsgData
+    {
+        public IVector2 miningSitePostion;
+        public int slotReservationId;
     }
-    public IVector2 getMiningSitePosition() {
-        return miningSitePosition;
+
+    @GoalParameter
+    protected IVector2 requestPosition;
+
+    @GoalResult
+    protected AssignMiningSlotMsgData assignMiningSlotMsgData;
+
+
+    public ReserveMiningSlotGoal(IVector2 requestPosition) {
+        this.requestPosition = requestPosition;
+    }
+
+    public AssignMiningSlotMsgData getAssignMiningSlotMsgData() {
+        return assignMiningSlotMsgData;
     }
 }
