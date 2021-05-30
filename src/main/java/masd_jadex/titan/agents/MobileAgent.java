@@ -4,7 +4,7 @@ import jadex.bdiv3.BDIAgentFactory;
 import jadex.bdiv3.annotation.Capability;
 import jadex.bridge.IInternalAccess;
 import jadex.micro.annotation.Agent;
-import masd_jadex.titan.capabilities.LocomotionCapability;
+import masd_jadex.titan.locomotion.LocomotionCapability;
 
 @Agent(type= BDIAgentFactory.TYPE)
 public class MobileAgent

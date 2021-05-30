@@ -15,7 +15,6 @@ import jadex.bdiv3.runtime.ChangeEvent;
 import jadex.bridge.service.annotation.OnInit;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.micro.annotation.Agent;
-import jadex.micro.annotation.AgentCreated;
 import jadex.micro.annotation.AgentFeature;
 
 /**

@@ -1,4 +1,4 @@
-package masd_jadex.titan.capabilities;
+package masd_jadex.titan.locomotion;
 
 
 import jadex.application.EnvironmentService;

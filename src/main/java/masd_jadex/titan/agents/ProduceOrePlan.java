@@ -2,13 +2,23 @@ package masd_jadex.titan.agents;
 
 import jadex.bdiv3.annotation.*;
 import jadex.bdiv3.runtime.IPlan;
+import jadex.bdiv3.runtime.PlanFinishedTaskCondition;
+import jadex.bdiv3.runtime.impl.PlanFailureException;
 import jadex.commons.future.ExceptionDelegationResultListener;
 import jadex.commons.future.Future;
 import jadex.commons.future.IFuture;
+import jadex.extension.envsupport.environment.AbstractTask;
+import jadex.extension.envsupport.environment.IEnvironmentSpace;
+import jadex.extension.envsupport.environment.ISpaceObject;
 import jadex.extension.envsupport.math.IVector2;
-import masd_jadex.titan.capabilities.LocomotionCapability;
+import masd_jadex.titan.locomotion.LocomotionCapability;
+import masd_jadex.titan.model.MiningSlotAssignment;
 import masd_jadex.titan.resource_extraction.ReserveMiningSlotGoal;
 import masd_jadex.titan.resource_extraction.ResourceExtractionCapability;
+import masd_jadex.titan.tasks.TakeMiningSlotTask;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Plan
 public class ProduceOrePlan
@@ -41,9 +51,14 @@ public class ProduceOrePlan
                 new ExceptionDelegationResultListener<ReserveMiningSlotGoal, Void>(ret)
                 {
                     @Override
-                    public void customResultAvailable(ReserveMiningSlotGoal result) {
-                        ReserveMiningSlotGoal.AssignMiningSlotMsgData data = result.getAssignMiningSlotMsgData();
-                        moveToMiningSite(ret, data.slotReservationId, data.miningSitePostion);
+                    public void customResultAvailable(ReserveMiningSlotGoal result) throws PlanFailureException {
+                        MiningSlotAssignment assignment = result.getMiningSlotAssignment();
+                        if (assignment == null) {
+                            // if we didn't get some work assigned, then we fail the plan to retry later
+                            throw new PlanFailureException("Produce Ore Plan did not receive a mining slot. Failing plan.");
+                        }
+
+                        moveToMiningSite(ret, assignment.slotReservationId, assignment.miningSitePosition);
                     }
                 }
             );
@@ -56,30 +71,53 @@ public class ProduceOrePlan
                 new ExceptionDelegationResultListener<LocomotionCapability.MoveGoal, Void>(ret)
                 {
                     @Override
-                    public void customResultAvailable(LocomotionCapability.MoveGoal result) throws Exception {
-                        ResourceExtractionCapability resourceExtraction = miner.getResourceExtraction();
-                        // TODO: execute takeMiningSlot on space object (add freeSlots variable in xml and add a Task that decrements it or fails if 0)
-                        resourceExtraction.getWorkPoolSupervision().takeMiningSlot(slotReservationId);
-                        // TODO: exectute drillForOre task on space object (add task to xml and implement energy reduction on agent)
-                        // TODO: how do we spawn an ore instance in the space: locomotionCapability.getEnvironment().componentAdded();
-                        // TODO: check how percepts are implemented and stop when the Mining site is depleted
-                        resourceExtraction.getWorkPoolSupervision().freeMiningSlot(slotReservationId);
-                        ret.setResult(null);
+                    public void customResultAvailable(LocomotionCapability.MoveGoal result) {
+                        takeMiningSlot(ret, slotReservationId);
                     }
                 }
         );
     }
 
+    private void takeMiningSlot(Future<Void> ret, int slotReservationId) {
+        // take mining slot on space object
+        Map<String, Object> props = new HashMap<String, Object>();
+        // plan finished condition aborts object tasks in space if the plan somehow finishes in the meantime
+        props.put(AbstractTask.PROPERTY_CONDITION, new PlanFinishedTaskCondition(rplan));
+        IEnvironmentSpace space = miner.locomotion.getEnvironment();
+        ISpaceObject avatar = miner.locomotion.getAvatar();
+        Object takeSlotTaskId = space.createObjectTask(TakeMiningSlotTask.TASK_TYPENAME, props, avatar);
+        //todo: try without undone, not completely sure for what it is
+        space.addTaskListener(takeSlotTaskId, avatar.getId(), new ExceptionDelegationResultListener<Object, Void>(ret, true) {
+            @Override
+            public void customResultAvailable(Object finishedTaskId) throws Exception {
+                // inform supervisor about occupied slot
+                ResourceExtractionCapability resourceExtraction = miner.getResourceExtraction();
+                resourceExtraction.getWorkPoolSupervision().takeMiningSlot(slotReservationId);
+                drillForOre(ret, slotReservationId);
+            }
+        });
+    }
+
+    private void drillForOre(Future<Void> ret, int slotReservationId) {
+        // TODO: exectute drillForOre task on space object (add task to xml and implement energy reduction on agent)
+        // TODO: how do we spawn an ore instance in the space: locomotionCapability.getEnvironment().componentAdded();
+        // TODO: check how percepts are implemented and stop when the Mining site is depleted
+
+        ResourceExtractionCapability resourceExtraction = miner.getResourceExtraction();
+        resourceExtraction.getWorkPoolSupervision().freeMiningSlot(slotReservationId);
+        ret.setResult(null);
+    }
+
     @PlanAborted
     public void aborted()
     {
-
+        System.out.println("ProduceOrePlan aborted.");
     }
 
     @PlanFailed
     public void failed(Exception e)
     {
-
+        System.out.println("ProduceOrePlan failed with exception: " + e.getMessage());
     }
 
 }

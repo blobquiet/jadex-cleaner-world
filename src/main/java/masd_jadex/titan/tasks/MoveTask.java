@@ -8,11 +8,11 @@ import jadex.extension.envsupport.environment.space2d.Space2D;
 import jadex.extension.envsupport.math.IVector2;
 
 
-
+//todo: clean what is not used in the  end
 public class MoveTask extends AbstractTask
 {
 
-    public static final String	PROPERTY_TYPENAME = "move";
+    public static final String TASK_TYPENAME = "move";
     public static final String	PROPERTY_DESTINATION = "destination";
 
     public static final String	PROPERTY_SPEED	= "speed"; // m/s
@@ -20,13 +20,11 @@ public class MoveTask extends AbstractTask
     public static final String	PROPERTY_TARGETRADIUS = "targetradius"; // meters
 
 
-
     /**
      *  Executes the task.
-     *  Handles exceptions. Subclasses should implement doExecute() instead.
-     *  @param space	The environment in which the task is executing.
-     *  @param obj	The object that is executing the task.
-     *  @param progress	The time that has passed according to the environment executor.
+     *  @param space The environment in which the task is executing.
+     *  @param obj The object that is executing the task.
+     *  @param progress The time that has passed according to the environment executor.
      */
     public void execute(IEnvironmentSpace space, ISpaceObject obj, long progress, IClockService clock)
     {

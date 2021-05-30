@@ -4,28 +4,28 @@ import jadex.bdiv3.annotation.Goal;
 import jadex.bdiv3.annotation.GoalParameter;
 import jadex.bdiv3.annotation.GoalResult;
 import jadex.extension.envsupport.math.IVector2;
+import masd_jadex.titan.model.MiningSlotAssignment;
 
 @Goal
 public class ReserveMiningSlotGoal
 {
-    public static class AssignMiningSlotMsgData
-    {
-        public IVector2 miningSitePostion;
-        public int slotReservationId;
-    }
-
     @GoalParameter
     protected IVector2 requestPosition;
 
     @GoalResult
-    protected AssignMiningSlotMsgData assignMiningSlotMsgData;
+    protected MiningSlotAssignment slotAssignment;
 
 
     public ReserveMiningSlotGoal(IVector2 requestPosition) {
         this.requestPosition = requestPosition;
     }
 
-    public AssignMiningSlotMsgData getAssignMiningSlotMsgData() {
-        return assignMiningSlotMsgData;
+    public MiningSlotAssignment getMiningSlotAssignment() {
+        return slotAssignment;
+    }
+    public void setMiningSlotAssignment(MiningSlotAssignment assignment) {
+        assert slotAssignment == null;
+        assert assignment != null;
+        slotAssignment = assignment;
     }
 }

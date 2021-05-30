@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
         IPlatformConfiguration conf = PlatformConfigurationHandler.getDefaultNoGui();
 
-        //conf.setGui(true);
+        conf.setGui(true);
 
         // Set logging level to provider better debugging output for agents.
         conf.setLoggingLevel(Level.WARNING);

@@ -1,4 +1,4 @@
-package masd_jadex.titan.capabilities;
+package masd_jadex.titan.locomotion;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,8 +43,9 @@ public class GoToTargetPlan
         props.put(AbstractTask.PROPERTY_CONDITION, new PlanFinishedTaskCondition(rplan));
         IEnvironmentSpace space = capability.getEnvironment();
 
+        // todo: return this future instead of DONE?
         Future<Void> fut = new Future<Void>();
-        Object moveTaskId = space.createObjectTask(MoveTask.PROPERTY_TYPENAME, props, avatar.getId());
+        Object moveTaskId = space.createObjectTask(MoveTask.TASK_TYPENAME, props, avatar.getId());
         space.addTaskListener(moveTaskId, avatar.getId(), new DelegationResultListener<Void>(fut, true));
         fut.get();
         return IFuture.DONE;

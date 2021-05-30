@@ -6,7 +6,7 @@ import jadex.bdiv3.features.IBDIAgentFeature;
 import jadex.bridge.service.annotation.OnStart;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.AgentFeature;
-import masd_jadex.titan.capabilities.LocomotionCapability;
+import masd_jadex.titan.locomotion.LocomotionCapability;
 import masd_jadex.titan.resource_extraction.ResourceExtractionCapability;
 
 @Agent(type= BDIAgentFactory.TYPE)
@@ -40,7 +40,7 @@ public class Miner extends MobileAgent
         bdi.dispatchTopLevelGoal(new ProduceOreGoal());
     }
 
-    @Goal(unique = true, rebuild = true, recurdelay = 3000)
+    @Goal(recur=true, recurdelay=3000)
     public static class ProduceOreGoal
     {
 

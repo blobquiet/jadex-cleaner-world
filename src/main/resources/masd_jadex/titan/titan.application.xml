@@ -35,6 +35,13 @@
             <env:property name="border">Space2D.BORDER_RELAXED</env:property> <!--objects can wander off the map infinitely -->
 
             <env:objecttypes>
+                <env:objecttype name="ChargingStation">
+                    <env:property name="speed" class="double">1</env:property> <!--m/s -->
+                    <env:property name="position" class="IVector2"/>
+                </env:objecttype>
+                <env:objecttype name="Supervisor">
+                    <env:property name="position" class="IVector2" dynamic="true">$space.getSpaceObjectsByType("ChargingStation")[0].getProperty("position")</env:property>
+                </env:objecttype>
                 <env:objecttype name="MiningSite">
                     <env:property name="id" class="int">GlobalIds.getNewId()</env:property>
                     <env:property name="initial_ore" class="float"/>
@@ -49,10 +56,6 @@
                     <env:property name="speed" class="double">10</env:property> <!--m/s -->
                     <env:property name="position" class="IVector2">$space.getSpaceObjectsByType("ChargingStation")[0].getProperty("position")</env:property>
                     <env:property name="capacity" class="float">1000</env:property> <!-- kg -->
-                </env:objecttype>
-                <env:objecttype name="ChargingStation">
-                    <env:property name="speed" class="double">1</env:property> <!--m/s -->
-                    <env:property name="position" class="IVector2"/>
                 </env:objecttype>
 <!--                <env:objecttype name="target">-->
 <!--                    <env:property name="abbau" class="boolean" dynamic="true">-->
@@ -98,6 +101,7 @@
 
             <env:tasktypes>
                 <env:tasktype name="move" class="MoveTask" />
+                <env:tasktype name="takeMiningSlot" class="TakeMiningSlotTask" />
 <!--                <env:tasktype name="rotate" class="RotationTask" />-->
 <!--                <env:tasktype name="analyze" class="AnalyzeTargetTask" />-->
 <!--                <env:tasktype name="produce" class="ProduceOreTask" />-->
@@ -110,9 +114,7 @@
 
             <env:avatarmappings>
                 <env:avatarmapping componenttype="Miner" objecttype="Miner" />
-<!--                <env:avatarmapping componenttype="Sentry" objecttype="sentry"/>-->
-<!--                <env:avatarmapping componenttype="Producer" objecttype="producer"/>-->
-<!--                <env:avatarmapping componenttype="Carry" objecttype="carry"/>-->
+                <env:avatarmapping componenttype="Supervisor" objecttype="Supervisor" />
             </env:avatarmappings>
 
             <env:perspectives>
@@ -236,18 +238,18 @@
 
     <componenttypes>
         <componenttype name="Miner" filename="masd_jadex/titan/agents/Miner.class"/>
-<!--        <componenttype name="ChargingStation" filename="jadex/bdiv3/examples/marsworld/producer/ProducerAgent.class"/>-->
-<!--        <componenttype name="Carry" filename="jadex/bdiv3/examples/marsworld/carry/CarryAgent.class"/>-->
+        <componenttype name="Supervisor" filename="masd_jadex/titan/agents/Supervisor.class"/>
     </componenttypes>
 
     <configurations>
-        <configuration name="1 ChargingStation / 3 Mining Sites / Todo: ...">
+        <configuration name="1 ChargingStation / 3 Mining Sites / 1 Supervisor Todo: ...">
             <extensions>
                 <env:envspace name="titan" type="2dspace">
                     <env:objects>
                         <env:object type="ChargingStation">
                             <env:property name="position">new Vector2Double(50.0, 50.0)</env:property>
                         </env:object>
+                        <env:object type="Supervisor"/>
                         <env:object type="MiningSite">
                             <env:property name="position">new Vector2Double(60, 32)</env:property>
                             <env:property name="remaining_ore">3000</env:property>
@@ -301,7 +303,7 @@
             </extensions>
             <components>
                 <component type="Miner" number="2"/>
-<!--                <component type="Producer" number="2"/>-->
+                <component type="Supervisor" number="1"/>
 <!--                <component type="Carry" number="3"/>-->
             </components>
         </configuration>
