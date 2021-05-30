@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Capability
-public class WorkPoolSupervision implements IWorkPoolSupervision
+public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
 {
     protected static final int LOW_WORK_POOL_THRESHOLD = 2;
     protected static final int OK_WORK_POOL_THRESHOLD = 10;

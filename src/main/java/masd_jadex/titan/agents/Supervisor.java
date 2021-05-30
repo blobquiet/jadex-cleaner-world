@@ -13,7 +13,7 @@ import jadex.micro.annotation.*;
 import masd_jadex.titan.model.MiningSiteInfo;
 import masd_jadex.titan.model.MiningSlotAssignment;
 import masd_jadex.titan.work_pool_supervision.IWorkPoolSupervision;
-import masd_jadex.titan.work_pool_supervision.WorkPoolSupervision;
+import masd_jadex.titan.work_pool_supervision.WorkPoolSupervisionCapability;
 
 
 @Agent(type= BDIAgentFactory.TYPE)
@@ -28,7 +28,7 @@ public class Supervisor implements IWorkPoolSupervision
     IBDIAgentFeature bdi;
 
     @Capability
-    WorkPoolSupervision workPoolSupervisionCapability = new WorkPoolSupervision();
+    WorkPoolSupervisionCapability workPoolSupervisionCapability = new WorkPoolSupervisionCapability();
 
     @OnStart
     public void body()
