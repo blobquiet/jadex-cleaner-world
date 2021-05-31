@@ -1,5 +1,6 @@
 package masd_jadex.titan.agents;
 
+import jadex.application.EnvironmentService;
 import jadex.bdiv3.BDIAgentFactory;
 import jadex.bdiv3.annotation.Capability;
 import jadex.bdiv3.features.IBDIAgentFeature;
@@ -36,7 +37,6 @@ public class Supervisor implements IWorkPoolSupervision
         bdi.dispatchTopLevelGoal(workPoolSupervisionCapability.new AcquireMiningSitesGoal());
     }
 
-    // TODO: move to base class
     @Override
     public ITerminableFuture<MiningSlotAssignment> requestMiningSlot(IVector2 agentPosition) {
         return workPoolSupervisionCapability.requestMiningSlot(agentPosition);

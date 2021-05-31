@@ -14,7 +14,10 @@ public class MobileAgent
 
     /** The customer capability. */
     @Capability
-    protected LocomotionCapability locmotion = new LocomotionCapability();
+    protected LocomotionCapability locomotion = new LocomotionCapability();
 
+    public LocomotionCapability getLocomotion() {
+        return locomotion;
+    }
 
 }

@@ -23,14 +23,14 @@ public class MoveTask extends AbstractTask
     /**
      *  Executes the task.
      *  @param space The environment in which the task is executing.
-     *  @param obj The object that is executing the task.
+     *  @param avatar The object that is executing the task.
      *  @param progress The time that has passed according to the environment executor.
      */
-    public void execute(IEnvironmentSpace space, ISpaceObject obj, long progress, IClockService clock)
+    public void execute(IEnvironmentSpace space, ISpaceObject avatar, long progress, IClockService clock)
     {
-        double speed = ((Number)obj.getProperty(PROPERTY_SPEED)).doubleValue();
+        double speed = ((Number)avatar.getProperty(PROPERTY_SPEED)).doubleValue();
         double maxDist = progress * speed * 0.001;
-        IVector2 position = (IVector2)obj.getProperty(Space2D.PROPERTY_POSITION);
+        IVector2 position = (IVector2)avatar.getProperty(Space2D.PROPERTY_POSITION);
 
         double targetRadius = (Double)space.getProperty(PROPERTY_TARGETRADIUS);
         IVector2 destination = (IVector2)getProperty(PROPERTY_DESTINATION);
@@ -43,15 +43,15 @@ public class MoveTask extends AbstractTask
         }
         else
         {
-            newPosition = position;
+            newPosition = destination;
         }
 
-        ((Space2D)space).setPosition(obj.getId(), newPosition);
+        ((Space2D)space).setPosition(avatar.getId(), newPosition);
 
         // processVision(space, obj, agent);
 
         if(newPosition==destination) {
-            setFinished(space, obj, true);
+            setFinished(space, avatar, true);
         }
     }
 

@@ -31,7 +31,7 @@ public class TakeMiningSlotTask extends AbstractTask
      *  @param progress The time that has passed according to the environment executor.
      */
     public void execute(IEnvironmentSpace space, ISpaceObject avatar, long progress, IClockService clock) {
-        ISpaceObject[] miningSites = space.getSpaceObjectsByType(TASK_TYPENAME);
+        ISpaceObject[] miningSites = space.getSpaceObjectsByType(OBJECT_TYPENAME);
         int miningSiteId = ((Number) getProperty(PROPERTY_ID)).intValue();
         boolean miningSiteFound = false;
         for (ISpaceObject miningSite : miningSites) {
@@ -62,7 +62,7 @@ public class TakeMiningSlotTask extends AbstractTask
             throw new IllegalStateException("Someone tried to take a mining slot but the distance to the mining site was to big.");
         }
 
-        int num_slots = (Integer)space.getProperty(PROPERTY_NUM_SLOTS);
+        int num_slots = ((Number)miningSite.getProperty(PROPERTY_NUM_SLOTS)).intValue();
         assert num_slots >= 0;
         if (num_slots == 0) {
             throw new IllegalStateException("Someone tried to take a mining slot but there is no free slot available.");
