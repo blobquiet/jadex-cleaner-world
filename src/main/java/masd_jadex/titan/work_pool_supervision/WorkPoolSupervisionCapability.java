@@ -1,22 +1,26 @@
 package masd_jadex.titan.work_pool_supervision;
 
-import jadex.application.EnvironmentService;
 import jadex.bdiv3.annotation.*;
 import jadex.bdiv3.runtime.ICapability;
+import jadex.bridge.IComponentIdentifier;
 import jadex.commons.future.ITerminableFuture;
 import jadex.commons.future.ITerminationCommand;
 import jadex.commons.future.TerminableFuture;
 import jadex.commons.future.TerminationCommand;
-import jadex.extension.envsupport.environment.AbstractEnvironmentSpace;
-import jadex.extension.envsupport.environment.ISpaceObject;
 import jadex.extension.envsupport.math.IVector2;
 import jadex.micro.annotation.Agent;
 import masd_jadex.titan.model.MiningSiteInfo;
 import masd_jadex.titan.model.MiningSlotAssignment;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @Capability
+@Plans({
+        @Plan(trigger=@Trigger(goals={WorkPoolSupervisionCapability.AcquireMiningSitesGoal.class,}), body=@Body(AcquireMiningSitesPlan.class)),
+})
 public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
 {
     protected static final int LOW_WORK_POOL_THRESHOLD = 2;
@@ -43,9 +47,12 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
     protected ICapability capability;
 
     @Belief
+    protected final Set<IComponentIdentifier> knownScouts = new HashSet<>();
+
+    @Belief
     protected final List<MiningSite> workPool = new LinkedList<>();
 
-    @Goal(recur=true, recurdelay=3000)
+    @Goal(unique=true, recur=true, recurdelay=3000)
     public class AcquireMiningSitesGoal
     {
         @GoalMaintainCondition
@@ -76,32 +83,6 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
         }
     }
 
-    boolean startValuesRead = false;
-    @Plan(trigger=@Trigger(goals=AcquireMiningSitesGoal.class))
-    protected void aquireMiningSitesPlan()
-    {
-        System.out.println("We have too few mining sites, we have to find some more!");
-        // Hack for mining sites discovered already at startup
-
-        if (!startValuesRead) {
-            for (ISpaceObject obj : ((AbstractEnvironmentSpace) EnvironmentService.getSpace(capability.getAgent(), "titan").get()).getSpaceObjectsByType("MiningSite")) {
-                if ((Boolean) obj.getProperty("discovered")) {
-                    MiningSite site = new MiningSite();
-                    site.position = ((IVector2) obj.getProperty("position"));
-                    site.depleted = (Boolean) obj.getProperty("depleted");
-                    site.id = (Integer) obj.getProperty("id");
-                    site.numSlots = (Integer) obj.getProperty("num_slots");
-                    synchronized (workPool) {
-                        workPool.add(site);
-                    }
-                }
-            }
-
-            startValuesRead = true;
-        }
-        // TODO: create scout agents and tell them to explore
-    }
-
     @Override
     public ITerminableFuture<MiningSlotAssignment> requestMiningSlot(IVector2 agentPosition) {
         TerminableFuture<MiningSlotAssignment> res = new TerminableFuture<>();
@@ -110,7 +91,6 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
             @Override
             public void terminated(Exception reason) {
                 System.out.println("Miner aborted request for work because I was not able to provide work in time!");
-                // todo: implement termination of slot assignment
             }
         };
 
@@ -190,11 +170,12 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
         synchronized (workPool) {
             for (MiningSite site : workPool) {
                 if (site.id == info.id) {
-                    System.out.println("Some rediscovered the same mining site as someone else. Ignoring.");
+                    System.out.println("Someone rediscovered the same mining site as someone else. Ignoring.");
                     return;
                 }
             }
 
+            System.out.println("New mining site reported!");
             workPool.add(miningSite);
         }
     }
@@ -230,5 +211,10 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
         }
 
 
+    }
+
+    @Override
+    public void subscribeScout(IComponentIdentifier id) {
+        knownScouts.add(id);
     }
 }

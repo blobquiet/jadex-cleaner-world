@@ -4,6 +4,7 @@ import jadex.application.EnvironmentService;
 import jadex.bdiv3.BDIAgentFactory;
 import jadex.bdiv3.annotation.Capability;
 import jadex.bdiv3.features.IBDIAgentFeature;
+import jadex.bridge.IComponentIdentifier;
 import jadex.bridge.IInternalAccess;
 import jadex.bridge.service.ServiceScope;
 import jadex.bridge.service.annotation.OnStart;
@@ -60,5 +61,10 @@ public class Supervisor implements IWorkPoolSupervision
     @Override
     public void miningSiteDepleted(IVector2 miningSitePosition) {
         workPoolSupervisionCapability.miningSiteDepleted(miningSitePosition);
+    }
+
+    @Override
+    public void subscribeScout(IComponentIdentifier id) {
+        workPoolSupervisionCapability.subscribeScout(id);
     }
 }

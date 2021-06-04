@@ -1,5 +1,6 @@
 package masd_jadex.titan.work_pool_supervision;
 
+import jadex.bridge.IComponentIdentifier;
 import jadex.bridge.service.annotation.Service;
 import jadex.commons.future.ITerminableFuture;
 import jadex.extension.envsupport.math.IVector2;
@@ -15,4 +16,6 @@ public interface IWorkPoolSupervision
 
     void foundMiningSite(MiningSiteInfo info);
     void miningSiteDepleted(IVector2 miningSitePosition);
+
+    void subscribeScout(IComponentIdentifier id);
 }
