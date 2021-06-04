@@ -25,7 +25,7 @@ public class ExplorePlan {
     public IFuture<Void> body() {
         Future<Void> ret  = new Future<>();
         // random walk
-        IVector2 nextTarget = new Vector2Double(Math.random(), Math.random()).multiply(50);
+        IVector2 nextTarget = new Vector2Double(Math.random(), Math.random()).multiply(100);
         IFuture<LocomotionCapability.MoveGoal> fut = rplan.dispatchSubgoal(new LocomotionCapability.MoveGoal(nextTarget));
         fut.addResultListener(new ExceptionDelegationResultListener<LocomotionCapability.MoveGoal, Void>(ret)
         {

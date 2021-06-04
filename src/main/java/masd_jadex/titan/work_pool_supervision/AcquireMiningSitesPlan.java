@@ -14,6 +14,7 @@ import jadex.extension.envsupport.environment.AbstractEnvironmentSpace;
 import jadex.extension.envsupport.environment.ISpaceObject;
 import jadex.extension.envsupport.math.IVector2;
 import masd_jadex.titan.model.MiningSiteInfo;
+import masd_jadex.titan.tasks.MiningSiteTask;
 
 @Plan
 public class AcquireMiningSitesPlan {
@@ -52,8 +53,7 @@ public class AcquireMiningSitesPlan {
         // Hack for mining sites discovered already at startup
         if (!startValuesRead) {
             for (ISpaceObject obj : ((AbstractEnvironmentSpace) EnvironmentService.getSpace(capability.capability.getAgent(), "titan").get()).getSpaceObjectsByType("MiningSite")) {
-                if ((Boolean) obj.getProperty("discovered")) {
-                    WorkPoolSupervisionCapability.MiningSite site = new WorkPoolSupervisionCapability.MiningSite();
+                if ((Boolean)obj.getProperty(MiningSiteTask.PROPERTY_DISCOVERED)) {
                     MiningSiteInfo info = new MiningSiteInfo();
                     info.id = (Integer) obj.getProperty("id");
                     info.position = (IVector2) obj.getProperty("position");

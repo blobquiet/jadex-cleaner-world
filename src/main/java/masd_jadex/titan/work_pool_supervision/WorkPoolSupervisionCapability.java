@@ -192,7 +192,7 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
                     continue;
                 }
 
-                double d = miningSite.position.copy().subtract(miningSitePosition).getSquaredLength().getAsDouble();
+                double d = site.position.copy().subtract(miningSitePosition).getSquaredLength().getAsDouble();
                 if( d < minDist) {
                     miningSite = site;
                     minDist = d;
@@ -202,7 +202,7 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
             if (miningSite == null) {
                 System.out.println("Someone said a mining site is depleted, but there are no mining sites known yet!");
                 return;
-            } else if (minDist > 0.001) {
+            } else if (minDist > 0.01) {
                 System.out.println("Someone said a mining site is depleted, but doesn't seem to know its location! We ignore it.");
                 return;
             }
