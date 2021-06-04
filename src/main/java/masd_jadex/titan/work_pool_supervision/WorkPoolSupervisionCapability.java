@@ -76,23 +76,28 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
         }
     }
 
+    boolean startValuesRead = false;
     @Plan(trigger=@Trigger(goals=AcquireMiningSitesGoal.class))
     protected void aquireMiningSitesPlan()
     {
         System.out.println("We have too few mining sites, we have to find some more!");
         // Hack for mining sites discovered already at startup
-        for (ISpaceObject obj : ((AbstractEnvironmentSpace) EnvironmentService.getSpace(capability.getAgent(), "titan").get()).getSpaceObjectsByType("MiningSite"))
-        {
-            if ((Boolean)obj.getProperty("discovered")) {
-                MiningSite site = new MiningSite();
-                site.position = ((IVector2)obj.getProperty("position"));
-                site.depleted = (Boolean)obj.getProperty("depleted");
-                site.id = (Integer)obj.getProperty("id");
-                site.numSlots = (Integer) obj.getProperty("num_slots");
-                synchronized (workPool) {
-                    workPool.add(site);
+
+        if (!startValuesRead) {
+            for (ISpaceObject obj : ((AbstractEnvironmentSpace) EnvironmentService.getSpace(capability.getAgent(), "titan").get()).getSpaceObjectsByType("MiningSite")) {
+                if ((Boolean) obj.getProperty("discovered")) {
+                    MiningSite site = new MiningSite();
+                    site.position = ((IVector2) obj.getProperty("position"));
+                    site.depleted = (Boolean) obj.getProperty("depleted");
+                    site.id = (Integer) obj.getProperty("id");
+                    site.numSlots = (Integer) obj.getProperty("num_slots");
+                    synchronized (workPool) {
+                        workPool.add(site);
+                    }
                 }
             }
+
+            startValuesRead = true;
         }
         // TODO: create scout agents and tell them to explore
     }

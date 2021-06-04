@@ -8,7 +8,6 @@ import jadex.extension.envsupport.environment.space2d.Space2D;
 import jadex.extension.envsupport.math.IVector2;
 
 
-//todo: clean what is not used in the  end
 public class MoveTask extends AbstractTask
 {
 
@@ -48,37 +47,9 @@ public class MoveTask extends AbstractTask
 
         ((Space2D)space).setPosition(avatar.getId(), newPosition);
 
-        // processVision(space, obj, agent);
-
         if(newPosition==destination) {
             setFinished(space, avatar, true);
         }
     }
 
-//    protected static void processVision(IEnvironmentSpace space, ISpaceObject obj, IExternalAccess agent)
-//    {
-//        // Process vision at new location.
-//        double	vision	= ((Number)obj.getProperty(PROPERTY_VISION)).doubleValue();
-//        final Set objects	= ((Space2D)space).getNearObjects((IVector2)obj.getProperty(Space2D.PROPERTY_POSITION), new Vector1Double(vision));
-//        if(objects!=null)
-//        {
-//            agent.scheduleStep(new IComponentStep<Void>()
-//            {
-//                @Classname("add")
-//                public IFuture<Void> execute(IInternalAccess ia)
-//                {
-//                    BaseAgent ba = (BaseAgent)ia.getFeature(IPojoComponentFeature.class).getPojoAgent();
-//                    for(Iterator<ISpaceObject> it=objects.iterator(); it.hasNext(); )
-//                    {
-//                        final ISpaceObject so = it.next();
-//                        if(so.getType().equals("target"))
-//                        {
-//                            ba.getMoveCapa().addTarget(so);
-//                        }
-//                    }
-//                    return IFuture.DONE;
-//                }
-//            });
-//        }
-//    }
 }

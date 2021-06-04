@@ -12,18 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 //todo: clean what is not used in the  end
-public class TakeMiningSlotTask extends AbstractTask
+public class TakeMiningSlotTask extends AbstractTask implements MiningSiteTask
 {
 
     public static final String TASK_TYPENAME = "takeMiningSlot";
-
-    public static final String OBJECT_TYPENAME = "MiningSite";
-    public static final String PROPERTY_ID	= "id";
-    public static final String PROPERTY_DISCOVERED = "discovered";
-    public static final String PROPERTY_NUM_SLOTS = "num_slots";
-    public static final String PROPERTY_ACTIVE_MINERS = "active_miners";
-
-
     /**
      *  Executes the task.
      *  @param space The environment in which the task is executing.
@@ -32,10 +24,10 @@ public class TakeMiningSlotTask extends AbstractTask
      */
     public void execute(IEnvironmentSpace space, ISpaceObject avatar, long progress, IClockService clock) {
         ISpaceObject[] miningSites = space.getSpaceObjectsByType(OBJECT_TYPENAME);
-        int miningSiteId = ((Number) getProperty(PROPERTY_ID)).intValue();
+        int miningSiteId = ((Number) getProperty(MiningSiteTask.PROPERTY_ID)).intValue();
         boolean miningSiteFound = false;
         for (ISpaceObject miningSite : miningSites) {
-            if (((Number) miningSite.getProperty(PROPERTY_ID)).intValue() == miningSiteId) {
+            if (((Number) miningSite.getProperty(MiningSiteTask.PROPERTY_ID)).intValue() == miningSiteId) {
                 miningSiteFound = true;
                 takeMiningSite(miningSite, avatar, space);
                 break;
@@ -83,30 +75,4 @@ public class TakeMiningSlotTask extends AbstractTask
         activeMiners.add(avatar.getId());
     }
 
-//    protected static void processVision(IEnvironmentSpace space, ISpaceObject obj, IExternalAccess agent)
-//    {
-//        // Process vision at new location.
-//        double	vision	= ((Number)obj.getProperty(PROPERTY_VISION)).doubleValue();
-//        final Set objects	= ((Space2D)space).getNearObjects((IVector2)obj.getProperty(Space2D.PROPERTY_POSITION), new Vector1Double(vision));
-//        if(objects!=null)
-//        {
-//            agent.scheduleStep(new IComponentStep<Void>()
-//            {
-//                @Classname("add")
-//                public IFuture<Void> execute(IInternalAccess ia)
-//                {
-//                    BaseAgent ba = (BaseAgent)ia.getFeature(IPojoComponentFeature.class).getPojoAgent();
-//                    for(Iterator<ISpaceObject> it=objects.iterator(); it.hasNext(); )
-//                    {
-//                        final ISpaceObject so = it.next();
-//                        if(so.getType().equals("target"))
-//                        {
-//                            ba.getMoveCapa().addTarget(so);
-//                        }
-//                    }
-//                    return IFuture.DONE;
-//                }
-//            });
-//        }
-//    }
 }
