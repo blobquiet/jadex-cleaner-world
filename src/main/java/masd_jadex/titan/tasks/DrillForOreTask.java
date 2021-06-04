@@ -83,6 +83,7 @@ public class DrillForOreTask extends AbstractTask implements MiningSiteTask
                 props.put(Space2D.PROPERTY_POSITION, ((IVector2) avatar.getProperty(Space2D.PROPERTY_POSITION)).copy().add(randomVec));
                 space.createSpaceObject("Ore", props, null);
                 miningSite.setProperty(MiningSiteTask.PROPERTY_REMAINING_ORE, ((Integer)miningSite.getProperty(MiningSiteTask.PROPERTY_REMAINING_ORE)) - 1);
+                System.out.println("Produced one Ore.");
             }
         }
         if ((Boolean)miningSite.getProperty(MiningSiteTask.PROPERTY_DEPLETED))
