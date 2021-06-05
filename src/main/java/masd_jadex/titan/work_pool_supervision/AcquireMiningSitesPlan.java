@@ -28,7 +28,7 @@ public class AcquireMiningSitesPlan {
     @PlanReason
     protected WorkPoolSupervisionCapability.AcquireMiningSitesGoal goal;
 
-    boolean startValuesRead = false;
+    static boolean startValuesRead = false;
 
     class CheckPlanComplete implements IComponentStep<Void>{
         Future<Void> ret;
@@ -38,11 +38,11 @@ public class AcquireMiningSitesPlan {
         @Override
         public IFuture<Void> execute(IInternalAccess ia) {
             if (!goal.isWorkPoolOk())
-                capability.capability.getAgent().scheduleStep(new CheckPlanComplete(ret));
+                capability.capability.getAgent().waitForDelay(100, new CheckPlanComplete(ret));
             else
                 ret.setResult(null);
 
-            return ret;
+            return Future.DONE;
         }
     }
 

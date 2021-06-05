@@ -10,7 +10,6 @@ import jadex.extension.envsupport.math.IVector2;
 import java.util.HashSet;
 import java.util.Set;
 
-//todo: clean what is not used in the  end
 public class FreeMiningSlotTask extends AbstractTask implements MiningSiteTask
 {
 

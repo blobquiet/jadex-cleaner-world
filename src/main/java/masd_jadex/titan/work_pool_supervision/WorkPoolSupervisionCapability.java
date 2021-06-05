@@ -1,6 +1,7 @@
 package masd_jadex.titan.work_pool_supervision;
 
 import jadex.bdiv3.annotation.*;
+import jadex.bdiv3.model.MProcessableElement;
 import jadex.bdiv3.runtime.ICapability;
 import jadex.bridge.IComponentIdentifier;
 import jadex.commons.future.ITerminableFuture;
@@ -23,8 +24,8 @@ import java.util.Set;
 })
 public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
 {
-    protected static final int LOW_WORK_POOL_THRESHOLD = 2;
-    protected static final int OK_WORK_POOL_THRESHOLD = 10;
+    protected static final int LOW_WORK_POOL_THRESHOLD = 1;
+    protected static final int OK_WORK_POOL_THRESHOLD = 2;
 
     public static class MiningSite {
         private static int reservationIdCounter = 0;
@@ -52,21 +53,24 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
     @Belief
     protected final List<MiningSite> workPool = new LinkedList<>();
 
-    @Goal(unique=true, recur=true, recurdelay=3000)
+    @Belief
+    protected int numReservationsGiven = 0;  // triggers the maintain goal below every time a reservation is given away
+
+    @Goal(excludemode=MProcessableElement.ExcludeMode.Never)
     public class AcquireMiningSitesGoal
     {
-        @GoalMaintainCondition
+        @GoalMaintainCondition(beliefs = "numReservationsGiven")
         boolean isWorkPoolLow() {
             //noinspection ResultOfMethodCallIgnored
             workPool.size(); // just there to let Jadex know that we read the work pool in the function call below
-            return countFreeSlots() > LOW_WORK_POOL_THRESHOLD;
+            return countFreeSlots() >= LOW_WORK_POOL_THRESHOLD;
         }
 
-        @GoalTargetCondition
+        @GoalTargetCondition(beliefs = "workPool")
         boolean isWorkPoolOk() {
             //noinspection ResultOfMethodCallIgnored
             workPool.size(); // just there to let Jadex know that we read the work pool in the function call below
-            return countFreeSlots() > OK_WORK_POOL_THRESHOLD;
+            return countFreeSlots() >= OK_WORK_POOL_THRESHOLD;
         }
 
         private int countFreeSlots() {
@@ -110,6 +114,7 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
                     int reservationId = MiningSite.getNextReservationId();
                     site.reserved.add(reservationId);
                     assignment.slotReservationId = reservationId;
+                    numReservationsGiven += 1;
                     break;
                 }
             }
@@ -207,6 +212,7 @@ public class WorkPoolSupervisionCapability implements IWorkPoolSupervision
                 return;
             }
 
+            System.out.println("A mining site was reported as depleted.");
             miningSite.depleted = true;
         }
 

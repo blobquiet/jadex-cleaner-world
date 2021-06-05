@@ -41,6 +41,7 @@
                 </env:objecttype>
                 <env:objecttype name="MiningSite">
                     <env:property name="id" class="int">GlobalIds.getNewId()</env:property>
+                    <env:property name="position" class="IVector2">((Space2D)$space).getRandomPosition(new Vector2Double(5, 5))</env:property>
                     <env:property name="initial_ore" class="float"/>
                     <env:property name="remaining_ore" class="float"/>
                     <env:property name="depleted" class="boolean" dynamic="true">
@@ -56,6 +57,7 @@
                 </env:objecttype>
                 <env:objecttype name="Scout">
                     <env:property name="speed" class="double">30</env:property> <!--m/s -->
+                    <env:property name="vision_range" class="double">7</env:property> <!--m -->
                     <env:property name="position" class="IVector2">$space.getSpaceObjectsByType("ChargingStation")[0].getProperty("position").copy().add(2)</env:property>
                 </env:objecttype>
                 <env:objecttype name="Ore">
@@ -68,6 +70,7 @@
                 <env:tasktype name="takeMiningSlot" class="TakeMiningSlotTask" />
                 <env:tasktype name="drillForOre" class="DrillForOreTask" />
                 <env:tasktype name="freeMiningSlot" class="FreeMiningSlotTask" />
+                <env:tasktype name="perceiveMiningSlots" class="PerceiveMiningSlotsTask" />
             </env:tasktypes>
 
             <env:dataviews>
@@ -90,28 +93,30 @@
                     <!--Mining Site  -->
                     <env:drawable objecttype="MiningSite" width="20" height="20">
                         <env:property name="slots_size" dynamic="true">$object.getProperty("num_slots")</env:property>
-                        <env:property name="remaining_ore_size" dynamic="true">new Vector2Double($object.getProperty("remaining_ore")/$object.getProperty("initial_ore"))</env:property>
-                        <env:ellipse size="remaining_ore_size" layer="1" color="#88880088">
+                        <env:property name="remaining_ore_size" dynamic="true">new Vector2Double(((Number)$object.getProperty("remaining_ore")).floatValue()/((Number)$object.getProperty("initial_ore")).floatValue())</env:property>
+                        <env:ellipse size="remaining_ore_size" layer="3" color="#88880088">
                             <env:drawcondition>$object.getProperty("discovered")</env:drawcondition>
                         </env:ellipse>
-                        <env:rectangle width="0.2" height="0.2" color="#888888" layer="0">
+                        <env:rectangle width="0.2" height="0.2" color="#888888" layer="1">
                             <env:drawcondition>$object.getProperty("discovered")</env:drawcondition>
                         </env:rectangle>
-                        <env:ellipse width="0.1" height="0.1" color="#88888888" layer="0">
+                        <env:ellipse width="0.1" height="0.1" color="#88888888" layer="1">
                             <env:drawcondition>!$object.getProperty("discovered")</env:drawcondition>
                         </env:ellipse>
                     </env:drawable>
                     <!-- Miner -->
                     <env:drawable objecttype="Miner" width="2" height="2">
-                        <env:ellipse width="1" height="1" color="#000000FF" />
+                        <env:ellipse width="1" height="1" color="#000000FF" layer="2"/>
                     </env:drawable>
                     <!-- Ore -->
                     <env:drawable objecttype="Ore" width="2" height="2">
-                        <env:rectangle width="1" height="1" color="#FF0000FF" />
+                        <env:rectangle width="1" height="1" color="#FF0000FF" layer="3"/>
                     </env:drawable>
                     <!-- Scout -->
-                    <env:drawable objecttype="Scout" width="5" height="5">
-                        <env:texturedrectangle imagepath="masd_jadex/titan/lupe.png" layer="-1"/>
+                    <env:drawable objecttype="Scout" width="1" height="1">
+                        <env:texturedrectangle width="5" height="5" imagepath="masd_jadex/titan/lupe.png" layer="4"/>
+                        <env:property name="vision_range_p" dynamic="true">new Vector2Double($object.getProperty("vision_range"), $object.getProperty("vision_range")).multiply(2)</env:property>
+                        <env:ellipse size="vision_range_p" color="#88888822" layer="-1"/>
                     </env:drawable>
                 </env:perspective>
 
@@ -132,7 +137,7 @@
     </componenttypes>
 
     <configurations>
-        <configuration name="1 ChargingStation / 3 Mining Sites / 1 Supervisor Todo: ...">
+        <configuration name="1 ChargingStation / 3 Mining Sites / 1 Supervisor / 3 Scouts ...">
             <extensions>
                 <env:envspace name="titan" type="2dspace">
                     <env:objects>
@@ -141,20 +146,33 @@
                         </env:object>
                         <env:object type="Supervisor"/>
                         <env:object type="MiningSite">
-                            <env:property name="position">new Vector2Double(60, 32)</env:property>
                             <env:property name="remaining_ore">5</env:property>
                             <env:property name="initial_ore">10</env:property>
                         </env:object>
                         <env:object type="MiningSite">
-                            <env:property name="position">new Vector2Double(3, 3)</env:property>
                             <env:property name="remaining_ore">10</env:property>
                             <env:property name="initial_ore">10</env:property>
                         </env:object>
                         <env:object type="MiningSite">
-                            <env:property name="position">new Vector2Double(20, 80)</env:property>
-                            <env:property name="remaining_ore">3</env:property>
+                            <env:property name="remaining_ore">4</env:property>
                             <env:property name="initial_ore">4</env:property>
-                            <env:property name="discovered">true</env:property>
+                        </env:object>
+                        <env:object type="MiningSite">
+                            <env:property name="remaining_ore">10</env:property>
+                            <env:property name="initial_ore">10</env:property>
+                        </env:object>
+                        <env:object type="MiningSite">
+                            <env:property name="remaining_ore">10</env:property>
+                            <env:property name="initial_ore">10</env:property>
+                        </env:object>
+                        <env:object type="MiningSite">
+                            <env:property name="remaining_ore">10</env:property>
+                            <env:property name="initial_ore">10</env:property>
+                        </env:object>
+                        <env:object type="MiningSite">
+                            <env:property name="remaining_ore">4</env:property>
+                            <env:property name="initial_ore">4</env:property>
+                            <env:property name="discovered">false</env:property>
                         </env:object>
                     </env:objects>
 
@@ -166,7 +184,7 @@
             <components>
                 <component type="Miner" number="2"/>
                 <component type="Supervisor" number="1"/>
-                <component type="Scout" number="1"/>
+                <component type="Scout" number="3"/>
             </components>
         </configuration>
     </configurations>
